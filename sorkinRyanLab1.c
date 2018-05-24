@@ -120,7 +120,7 @@ void insertSorted(List *list, void *toBeAdded)
   }
 
   // List is empty, insert node at head
-  // toBeAdded is greater than head, insert as new head
+  // or toBeAdded is greater than head, insert as new head
   if (list->head == NULL || list->compare((void*)list->head, toBeAdded) < 0)
   {
     insertFront(list, toBeAdded);
@@ -133,8 +133,10 @@ void insertSorted(List *list, void *toBeAdded)
     return;
   }
 
+  // Temp pointer to keep track of current node in list
   Node * curNode = list->head;
-  // Loop while curNode > toBeAdded to find correct spot
+
+  // Loop while the next node > toBeAdded to find correct spot
   while (list->compare((void*)curNode->next, toBeAdded) > 0)
   {
     curNode = curNode->next;
@@ -145,7 +147,7 @@ void insertSorted(List *list, void *toBeAdded)
     }
   }
 
-  // Cast toBeAdded to a Node* and add to list
+  // Add the new Node to the correct position and return
   Node * newNode = (Node*)toBeAdded;
   newNode->next = curNode->next;
   newNode->previous = curNode;
@@ -161,7 +163,10 @@ int deleteDataFromList(List *list, void *toBeDeleted)
     return EXIT_FAILURE;
   }
 
+  // Temp node to keep track of current node
   Node * temp = list->head;
+
+  // Iterate until the end of the list
   while (temp)
   {
     // Node to be deleted is found
@@ -170,9 +175,10 @@ int deleteDataFromList(List *list, void *toBeDeleted)
       // If the Node to be deleted is the head of the list
       if (temp == list->head)
       {
+        // Delete the node
         list->head = temp->next;
 
-        // If the head is not NULL set previous to NULL
+        // If the new head is not NULL set previous to NULL
         if (list->head)
         {
           list->head->previous = NULL;
@@ -184,6 +190,8 @@ int deleteDataFromList(List *list, void *toBeDeleted)
         if (temp->previous)
         {
           temp->previous->next = NULL;
+
+          // Delete the node
         }
       }
       // Node to be deleted is in the middle
@@ -192,10 +200,7 @@ int deleteDataFromList(List *list, void *toBeDeleted)
         temp->previous->next = temp->next;
         temp->next->previous = temp->previous;
       }
-      // Delete and free the Node
-      temp->next = NULL;
-      temp->previous = NULL;
-      free(temp);
+      list->deleteData((Node*)temp);
 
       return EXIT_SUCCESS;
     }

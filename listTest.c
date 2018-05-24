@@ -31,8 +31,6 @@ int main()
   insertSorted(testList, (void*)testNode2);
   insertSorted(testList, (void*)testNode4);
 
-  deleteDataFromList(testList, (void*)testNode1);
-
   printForward(testList);
   deleteList(testList);
 
@@ -74,9 +72,10 @@ void deleteNode(void* data)
     return;
   }
 
+  // Delete and free node
   Node * temp = (Node*)data;
-
   temp->next = NULL;
   temp->previous = NULL;
+  temp->data = NULL;
   free(temp);
 }
